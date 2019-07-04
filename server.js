@@ -1,37 +1,43 @@
 const express = require('express');
-const path = require('path');
+const http = require('http');
+const socketIo = require('socket.io');
 
-const app = express();
-const server = require('http').createServer(app);
-const io = require('socket.io').listen(server);
-
-const users = [];
-const connections = [];
-
-// Serve the static files from the React app
-app.use(express.static(path.join(__dirname, 'client/build')));
-
-// An api endpoint that returns a short list of items
-app.get('/api/getList', (req, res) => {
-  const list = ['item1', 'item2', 'item3'];
-  res.json(connections);
-  console.log('Sent list of items');
-});
-// Handles any requests that don't match the ones above
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '/client/build/index.html'));
-});
-
+// Port from environment variable or default - 4001
 const port = process.env.PORT || 5000;
-server.listen(port);
 
-console.log('App is listening on port ' + port);
+// Setting up express and adding socketIo middleware
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
 
-io.sockets.on('connection', socket => {
-  connections.push(socket.id);
-  console.log('Connected: %s sockets connected', connections.length);
+// Setting up a socket with the namespace "connection" for new sockets
+io.on('connection', socket => {
+  console.log('New client connected');
 
-  // Disconnect
-  // connections.splice(connections.indexOf(socket), 1);
-  // console.log('Disconnected: %s sockets connected', connections.length);
+  // Here we listen on a new namespace called "incoming data"
+  socket.on('incoming data', data => {
+    // Here we broadcast it out to all other sockets EXCLUDING the socket which sent us the data
+    socket.broadcast.emit('outgoing data', { num: data });
+  });
+
+  // A special namespace "disconnect" for when a client disconnects
+  socket.on('disconnect', () => console.log('Client disconnected'));
 });
+
+server.listen(port, () => console.log(`Listening on port ${port}`));
+
+const socket = require('socket.io-client')('http://127.0.0.1:4001');
+
+// starting speed at 0
+let speed = 0;
+
+// Simulating reading data every 100 milliseconds
+setInterval(function() {
+  // some sudo-randomness to change the values but not to drastically
+  const nextMin = speed - 2 > 0 ? speed - 2 : 2;
+  const nextMax = speed + 5 < 140 ? speed + 5 : Math.random() * (130 - 5 + 1) + 5;
+  speed = Math.floor(Math.random() * (nextMax - nextMin + 1) + nextMin);
+
+  // we emit the data. No need to JSON serialization!
+  socket.emit('incoming data', speed);
+}, 100);
