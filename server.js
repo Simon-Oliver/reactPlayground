@@ -17,6 +17,10 @@ const users = [];
 io.on('connection', socket => {
   console.log('New client connected ' + socket.id);
 
+  socket.on('init_data', () => {
+    io.emit('get_data', users);
+  });
+
   // Here we listen on a new namespace called "incoming data"
   socket.on('incoming data', data => {
     // Here we broadcast it out to all other sockets EXCLUDING the socket which sent us the data
@@ -27,6 +31,7 @@ io.on('connection', socket => {
     const userObj = { name: user, id: uuid() };
     users.push(userObj);
 
+    socket.broadcast.emit('outgoing users', users);
     console.log('newUser: ', users);
   });
 
