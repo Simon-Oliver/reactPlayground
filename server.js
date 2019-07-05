@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
+const uuid = require('uuid');
 
 // Port from environment variable or default - 4001
 const port = process.env.PORT || 5000;
@@ -10,9 +11,11 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
+const users = [];
+
 // Setting up a socket with the namespace "connection" for new sockets
 io.on('connection', socket => {
-  console.log('New client connected');
+  console.log('New client connected ' + socket.id);
 
   // Here we listen on a new namespace called "incoming data"
   socket.on('incoming data', data => {
@@ -20,24 +23,15 @@ io.on('connection', socket => {
     socket.broadcast.emit('outgoing data', { num: data });
   });
 
+  socket.on('newUser', user => {
+    const userObj = { name: user, id: uuid() };
+    users.push(userObj);
+
+    console.log('newUser: ', users);
+  });
+
   // A special namespace "disconnect" for when a client disconnects
-  socket.on('disconnect', () => console.log('Client disconnected'));
+  socket.on('disconnect', () => console.log('Client disconnected ' + socket.id));
 });
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
-
-const socket = require('socket.io-client')('http://127.0.0.1:4001');
-
-// starting speed at 0
-let speed = 0;
-
-// Simulating reading data every 100 milliseconds
-setInterval(function() {
-  // some sudo-randomness to change the values but not to drastically
-  const nextMin = speed - 2 > 0 ? speed - 2 : 2;
-  const nextMax = speed + 5 < 140 ? speed + 5 : Math.random() * (130 - 5 + 1) + 5;
-  speed = Math.floor(Math.random() * (nextMax - nextMin + 1) + nextMin);
-
-  // we emit the data. No need to JSON serialization!
-  socket.emit('incoming data', speed);
-}, 100);
