@@ -1,10 +1,10 @@
 import React from 'react';
-import Item from './Item';
+import Chat from './Chat';
 
 const App = () => {
   return (
     <div>
-      <Item />
+      <Chat />
     </div>
   );
 };

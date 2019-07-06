@@ -12,11 +12,11 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 const users = [];
+const client = [];
 
 // Setting up a socket with the namespace "connection" for new sockets
 io.on('connection', socket => {
-  console.log('New client connected ' + socket.id);
-
+  console.log(socket.id);
   socket.on('init_data', () => {
     io.emit('get_data', users);
   });
@@ -27,12 +27,21 @@ io.on('connection', socket => {
     socket.broadcast.emit('outgoing data', { num: data });
   });
 
-  socket.on('newUser', user => {
-    const userObj = { name: user, id: uuid() };
+  socket.on('newUser', userName => {
+    console.log('New client connected ' + socket.id);
+    const userObj = { userName, userId: socket.id };
+    console.log(userObj);
     users.push(userObj);
+    socket.emit('initUser', userObj);
+    console.log('SOCKET_ID: ', userObj.userId);
+    io.emit('outgoing users', users);
 
-    socket.broadcast.emit('outgoing users', users);
-    console.log('newUser: ', users);
+    console.log(users);
+  });
+
+  socket.on('message', message => {
+    console.log(message);
+    socket.broadcast.emit('outgoing messages', message);
   });
 
   // A special namespace "disconnect" for when a client disconnects
