@@ -12,13 +12,14 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 const users = [];
+const messages = [];
 const client = [];
 
 // Setting up a socket with the namespace "connection" for new sockets
 io.on('connection', socket => {
   console.log(socket.id);
   socket.on('init_data', () => {
-    io.emit('get_data', users);
+    io.emit('get_data', { users, messages });
   });
 
   // Here we listen on a new namespace called "incoming data"
@@ -41,7 +42,8 @@ io.on('connection', socket => {
 
   socket.on('message', message => {
     console.log(message);
-    socket.broadcast.emit('outgoing messages', message);
+    messages.push(message);
+    io.emit('outgoing messages', message);
   });
 
   // A special namespace "disconnect" for when a client disconnects
