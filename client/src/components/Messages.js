@@ -1,12 +1,13 @@
 import React from 'react';
+import './Messages.css';
 
 const Messages = props => {
   console.log('Messages Component', props.messages);
   const renderMessages = () => {
     const renderList = props.messages.map((e, i) => (
-      <li key={i}>
+      <li key={i} className="messages">
         <p>
-          <span>{e.userName}</span>
+          <span className="userName">{`${e.userName}:`}</span>
           {e.message}
         </p>
       </li>
@@ -15,7 +16,7 @@ const Messages = props => {
   };
   return (
     <div>
-      <ul>{renderMessages()}</ul>
+      <ul className="message-container">{renderMessages()}</ul>
     </div>
   );
 };

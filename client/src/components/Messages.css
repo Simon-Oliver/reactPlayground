@@ -1,0 +1,10 @@
+.message-container {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.message-container li span {
+    color: #363636;
+    margin-right: 5px;
+}
