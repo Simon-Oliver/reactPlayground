@@ -29,15 +29,20 @@ io.on('connection', socket => {
   });
 
   socket.on('newUser', userName => {
-    console.log('New client connected ' + socket.id);
-    const userObj = { userName, userId: socket.id };
-    console.log(userObj);
-    users.push(userObj);
-    socket.emit('initUser', userObj);
-    console.log('SOCKET_ID: ', userObj.userId);
-    io.emit('outgoing users', users);
+    const existingUser = users.find(u => u.userName === userName);
+    if (existingUser) {
+      socket.emit('existing user', existingUser);
+    } else if (!existingUser) {
+      console.log('New client connected ' + socket.id);
+      const userObj = { userName, userId: socket.id };
+      console.log(userObj);
+      users.push(userObj);
+      socket.emit('initUser', userObj);
+      console.log('SOCKET_ID: ', userObj.userId);
+      io.emit('outgoing users', users);
 
-    console.log(users);
+      console.log(users);
+    }
   });
 
   socket.on('message', message => {
@@ -51,3 +56,16 @@ io.on('connection', socket => {
 });
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
+
+// const bcrypt = require('bcryptjs');
+
+// const myFunction = async () => {
+//   const pw = 'H123456';
+//   const hashedPw = await bcrypt.hash(pw, 8);
+//   console.log(hashedPw);
+
+//   const isMatch = await bcrypt.compare('123456', hashedPw);
+//   console.log(isMatch);
+// };
+
+// myFunction();

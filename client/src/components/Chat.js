@@ -38,6 +38,10 @@ export default class Chat extends Component {
       this.setState(prevState => ({ messages: [...prevState.messages, message] }));
     });
 
+    this.socket.on('existing user', user =>
+      this.setState({ userName: user.userName, userId: user.userId })
+    );
+
     // const watchID = navigator.geolocation.watchPosition(position => {
     //   this.setState({ lat: position.coords.latitude, long: position.coords.longitude });
     //   console.log(position.coords.latitude, position.coords.longitude);
