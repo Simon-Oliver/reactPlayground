@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
+import { isBoolean } from 'util';
 import Login from './Login';
 
 export default class Chat extends Component {
@@ -34,21 +35,27 @@ export default class Chat extends Component {
     //   console.log(sessionStorage);
     // });
     // this.socket.on('error', e => this.setState({ error: e }));
-
-    if (sessionStorage.token) {
+    const hasToken = !sessionStorage.userName !== 'undefined';
+    console.log(!sessionStorage.userName === 'undefined');
+    if (hasToken) {
       console.log('componenstDidMount with sesssionstorage');
       this.socket.emit('auth_check');
     }
     this.socket.on('create_user', data => {
-      if (data.error) {
-        this.setState({ error: data.error });
-      }
       sessionStorage.token = data.token;
       sessionStorage.userName = data.userName;
       this.socket.emit('auth_check');
       this.setState({ error: '' });
     });
-    this.socket.on('auth', e => console.log(e));
+    this.socket.on('auth', e => console.log('Is authenticated', e));
+    this.socket.on('error', e => console.log(e));
+    this.socket.emit('login', { userName: 'oli', password: 'abc123' });
+    this.socket.on('login', data => {
+      console.log(data);
+      sessionStorage.token = data.token;
+      sessionStorage.userName = data.userName;
+      this.setState({ useName: data.userName, userId: data.userId });
+    });
     // this.socket.on('outgoing messages', message => {
     //   console.log(message);
     //   this.setState(prevState => ({ messages: [...prevState.messages, message] }));

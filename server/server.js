@@ -15,6 +15,8 @@ const io = socketIo(server);
 const users = [
   {
     userName: 'oli',
+    password: 'abc123',
+    userId: 'xxx123',
     token:
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InBhdHJpY2siLCJpYXQiOjE1NjI2NTUwMzN9.fJnnWHJl65gLYS3--HM5L5Z-Ip5JQIDQT4PeHR88ujw'
   }
@@ -26,8 +28,8 @@ const secret = 'You can only see me if you are logged in.';
 // Setting up a socket with the namespace "connection" for new sockets
 
 io.on('connection', socket => {
-  socket.on('auth_check', userName => {
-    const existingUser = users.find(u => u.userName === userName);
+  socket.on('auth_check', () => {
+    console.log('auth check fired');
     if (
       socket.handshake.query &&
       socket.handshake.query.token &&
@@ -35,14 +37,34 @@ io.on('connection', socket => {
     ) {
       jwt.verify(socket.handshake.query.token, 'secret', function(err, decoded) {
         if (err) {
-          io.emit('auth', { error: 'authentication_error' });
+          io.emit('error', { error: 'authentication_error' });
         } else {
           socket.decoded = decoded;
-          io.emit('auth', secret);
+          console.log('is authenitcated');
+          io.emit('auth', { isAuth: true });
         }
       });
     } else {
-      io.emit('auth', { error: 'authentication_error' });
+      io.emit('error', { error: 'authentication_error' });
+    }
+  });
+
+  socket.on('login', user => {
+    const existingUser = users.find(u => u.userName === user.userName);
+    if (!existingUser) {
+      io.emit('error', { error: 'no_user_account' });
+    } else {
+      const correctPw = existingUser.password === user.password;
+      if (existingUser && correctPw) {
+        const token = jwt.sign({ userName: user.userName }, 'secret');
+        const index = users.findIndex(item => item.name === user.userName);
+        const updatedUser = { ...existingUser, token };
+        users.splice(index, 1, updatedUser);
+        io.emit('login', updatedUser);
+        console.log(existingUser);
+      } else if (existingUser && !correctPw) {
+        io.emit('error', { error: 'incorrect_password' });
+      }
     }
   });
 
