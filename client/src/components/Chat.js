@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
-import { isBoolean } from 'util';
 import Login from './Login';
 
 export default class Chat extends Component {
