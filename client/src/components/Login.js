@@ -16,6 +16,7 @@ export default class Login extends Component {
   };
 
   componentDidMount() {
+    fetch('http://localhost:3000/test');
     this._isMounted = true;
   }
 
