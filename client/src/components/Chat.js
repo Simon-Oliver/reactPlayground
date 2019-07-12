@@ -15,7 +15,7 @@ export default class Chat extends Component {
     error: ''
   };
 
-  socket = io.connect(this.state.endpoint, { query: { token: sessionStorage.token } });
+  socket = io.connect(this.state.endpoint);
 
   componentDidMount() {
     console.log(sessionStorage);

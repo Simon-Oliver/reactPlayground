@@ -1,25 +1,41 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
+import { isLogin } from './utils/index';
 
 export default class Login extends Component {
-  state = {
-    userName: '',
-    isAuthenticated: true
+  state = { redirectToReferrer: false };
+
+  _isMounted = false;
+
+  login = () => {
+    isLogin.authenticate(data => {
+      if (this._isMounted) {
+        this.setState({ redirectToReferrer: true });
+      }
+    });
   };
 
-  changeInput = e => {
-    this.setState({ userName: e.target.value });
-  };
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
 
   render() {
-    const { loggedIn, userName, users } = this.props;
+    const { from } = this.props.location.state || { from: { pathname: '/' } };
+    const { redirectToReferrer } = this.state;
+
+    if (redirectToReferrer) return <Redirect to={from} />;
+
     return (
       <div>
-        <h3>Test Socket.io</h3>
-        <div>
-          <p>Please login!</p>
-          <input value={this.state.userName} onChange={e => this.changeInput(e)} />
-          <button onClick={() => this.props.sendEmit(this.state.userName)}>Test Emit</button>
-        </div>
+        <p>
+          You must log in to view the page at
+          {from.pathname}
+        </p>
+        <button onClick={this.login}>Log in</button>
       </div>
     );
   }

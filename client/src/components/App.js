@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link, Redirect, withRouter } from 'react-router-dom';
-import Chat from './Chat';
 import { PrivateRoute, Test } from './helpers/PrivateRoute';
 import Dashboard from './Dashboard';
 import Login from './Login';
