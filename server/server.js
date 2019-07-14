@@ -25,20 +25,22 @@ const messages = [];
 const client = [];
 const secret = 'You can only see me if you are logged in.';
 
-app.get('/test', (req, res) => {
-  console.log('Whoop');
-  io.on('connection', socket => {
-    socket.on('isLogin', data => {
-      console.log('isLogin fired', data);
-      if (data === '1234') {
-        io.emit('isLogin', { isLogin: true });
-      } else {
-        io.emit('isLogin', { isLogin: false });
-      }
-    });
+app.get('/login', (req, res) => {
+  console.log('REQ Body', req);
+  res.send({ isLogin: true });
+  //   console.log('Whoop');
+  //   io.on('connection', socket => {
+  //     socket.on('isLogin', data => {
+  //       console.log('isLogin fired', data);
+  //       if (data === '1234') {
+  //         io.emit('isLogin', { isLogin: true });
+  //       } else {
+  //         io.emit('isLogin', { isLogin: false });
+  //       }
+  //     });
 
-    socket.on('disconnect', () => console.log('Client disconnected ' + socket.id));
-  });
+  //     socket.on('disconnect', () => console.log('Client disconnected ' + socket.id));
+  //   });
 });
 
 // Setting up a socket with the namespace "connection" for new sockets

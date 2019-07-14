@@ -8,7 +8,8 @@ export default class Login extends Component {
   _isMounted = false;
 
   login = () => {
-    isLogin.authenticate(data => {
+    console.log('Login fired');
+    isLogin.authenticate(() => {
       if (this._isMounted) {
         this.setState({ redirectToReferrer: true });
       }
@@ -16,7 +17,6 @@ export default class Login extends Component {
   };
 
   componentDidMount() {
-    fetch('http://localhost:3000/test');
     this._isMounted = true;
   }
 
