@@ -15,7 +15,7 @@ export const isLogin = {
     //   cb('Im the callback');
     // });
 
-    fetch('http://localhost:3000/login', { data: 'Test' })
+    fetch('http://localhost:3000/login', { credentials: 'include' })
       .then(res => res.json())
       .then(data => (this.isAuthenticated = data.isLogin))
       .then(() => cb());

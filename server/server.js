@@ -3,12 +3,23 @@ const http = require('http');
 const socketIo = require('socket.io');
 const uuid = require('uuid');
 const jwt = require('jsonwebtoken');
+const session = require('express-session');
+const passport = require('passport');
+LocalStrategy = require('passport-local').Strategy;
 
 // Port from environment variable or default - 4001
 const port = process.env.PORT || 5000;
 
 // Setting up express and adding socketIo middleware
 const app = express();
+app.use(
+  session({
+    secret: 'work hard',
+    resave: true,
+    saveUninitialized: false
+  })
+);
+
 const server = http.createServer(app);
 const io = socketIo(server);
 
@@ -26,7 +37,8 @@ const client = [];
 const secret = 'You can only see me if you are logged in.';
 
 app.get('/login', (req, res) => {
-  console.log('REQ Body', req);
+  console.log('REQ Body', req.session);
+
   res.send({ isLogin: true });
   //   console.log('Whoop');
   //   io.on('connection', socket => {
