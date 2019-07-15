@@ -3,13 +3,13 @@ import { Redirect } from 'react-router-dom';
 import { isLogin } from './utils/index';
 
 export default class Login extends Component {
-  state = { redirectToReferrer: false, name: '', password: '' };
+  state = { redirectToReferrer: false, email: '', password: '' };
 
   _isMounted = false;
 
   login = () => {
     console.log('Login fired');
-    isLogin.authenticate(() => {
+    isLogin.authenticate(this.state, () => {
       if (this._isMounted) {
         this.setState({ redirectToReferrer: true });
       }
@@ -46,20 +46,23 @@ export default class Login extends Component {
           {from.pathname}
         </p>
         <form onSubmit={this.handleSubmit}>
-          <label>
-            Name:
-            <input name="name" type="text" value={this.state.name} onChange={this.handleChange} />
-          </label>
-          <input type="submit" value="Submit" />
-          <label>
-            Password:
-            <input
-              name="password"
-              type="text"
-              value={this.state.password}
-              onChange={this.handleChange}
-            />
-          </label>
+          <h1>Login Below!</h1>
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter email"
+            value={this.state.email}
+            onChange={this.handleChange}
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter password"
+            value={this.state.password}
+            onChange={this.handleChange}
+            required
+          />
           <input type="submit" value="Submit" />
         </form>
         <button onClick={this.login}>Log in</button>

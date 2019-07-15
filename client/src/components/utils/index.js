@@ -1,10 +1,6 @@
-import io from 'socket.io-client';
-
-const socket = io.connect('http://192.168.1.105:5000/');
-
 export const isLogin = {
   isAuthenticated: false,
-  authenticate(cb) {
+  authenticate(data, cb) {
     // socket.emit('isLogin', '1234');
     // socket.on('isLogin', ({ isLogin }) => {
     //   if (isLogin) {
@@ -15,9 +11,30 @@ export const isLogin = {
     //   cb('Im the callback');
     // });
 
-    fetch('http://localhost:3000/login', { credentials: 'include' })
-      .then(res => res.json())
-      .then(data => (this.isAuthenticated = data.isLogin))
-      .then(() => cb());
+    // fetch('http://localhost:3000/secret', { credentials: 'include' })
+    //   .then(res => res.json())
+    //   .then(data => (this.isAuthenticated = data.isLogin))
+    //   .then(() => cb());
+
+    fetch('/authenticate', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => {
+        if (res.status === 200) {
+          this.isAuthenticated = true;
+        } else {
+          const error = new Error(res.error);
+          throw error;
+        }
+      })
+      .then(() => cb())
+      .catch(err => {
+        console.error(err);
+        alert('Error logging in please try again');
+      });
   }
 };
