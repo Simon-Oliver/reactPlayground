@@ -37,14 +37,12 @@ export default class Login extends Component {
     const { from } = this.props.location.state || { from: { pathname: '/' } };
     const { redirectToReferrer } = this.state;
 
-    if (redirectToReferrer) return <Redirect to={from} />;
-
+    if (redirectToReferrer) {
+      return <Redirect to={from} />;
+    }
     return (
       <div>
-        <p>
-          You must log in to view the page at
-          {from.pathname}
-        </p>
+        <p>You must log in to view this page.</p>
         <form onSubmit={this.handleSubmit}>
           <h1>Login Below!</h1>
           <input
