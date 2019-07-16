@@ -38,32 +38,38 @@ export default class Login extends Component {
     const { redirectToReferrer } = this.state;
 
     if (redirectToReferrer) {
-      return <Redirect to={from} />;
+      return <Redirect to={{ pathname: from.pathname, state: this.state.email }} />;
     }
     return (
-      <div>
+      <div className="ui segment">
         <p>You must log in to view this page.</p>
-        <form onSubmit={this.handleSubmit}>
-          <h1>Login Below!</h1>
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter email"
-            value={this.state.email}
-            onChange={this.handleChange}
-            required
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter password"
-            value={this.state.password}
-            onChange={this.handleChange}
-            required
-          />
-          <input type="submit" value="Submit" />
+        <form className="ui form" onSubmit={this.handleSubmit}>
+          <div className="field">
+            <label>Email</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter email"
+              value={this.state.email}
+              onChange={this.handleChange}
+              required
+            />
+          </div>
+          <div className="field">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter password"
+              value={this.state.password}
+              onChange={this.handleChange}
+              required
+            />
+          </div>
+          <button className="ui button" type="submit">
+            Submit
+          </button>
         </form>
-        <button onClick={this.login}>Log in</button>
       </div>
     );
   }

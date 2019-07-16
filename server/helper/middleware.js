@@ -6,6 +6,7 @@ dotenv.config();
 const secret = process.env.TOKEN_SECRET;
 
 const withAuth = (req, res, next) => {
+  console.log(req);
   const token =
     req.body.token || req.query.token || req.headers['x-access-token'] || req.cookies.token;
   if (!token) {

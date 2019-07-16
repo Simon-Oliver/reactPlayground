@@ -12,7 +12,7 @@ router.get('/login', (req, res) => {
   res.send('Welcome!');
 });
 router.get('/secret', withAuth, (req, res) => {
-  res.send('The password is potato');
+  res.send(req.email);
 });
 
 router.post('/register', (req, res) => {
