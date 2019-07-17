@@ -1,20 +1,23 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 class Dashboard extends React.Component {
   state = {
-    email: ''
+    email: '',
+    name: '',
+    role: ''
   };
 
   componentDidMount() {
     fetch('/secret')
-      .then(res => res.text())
-      .then(data => this.setState({ email: data }));
+      .then(res => res.json())
+      .then(data => this.setState({ ...data }));
   }
 
   render() {
     return (
       <div>
-        <h3>{`I'm a private dashboard for "${this.state.email}"`}</h3>
+        <h3>{`I'm a private dashboard for "${this.state.name}"`}</h3>
       </div>
     );
   }

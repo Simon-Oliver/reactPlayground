@@ -12,14 +12,17 @@ router.get('/login', (req, res) => {
   res.send('Welcome!');
 });
 router.get('/secret', withAuth, (req, res) => {
-  res.send(req.email);
+  const { name, role, email } = req;
+  res.send({ name, role, email });
 });
 
 router.post('/register', (req, res) => {
-  const { email, password } = req.body;
-  const user = new User({ email, password });
+  const { ...userData } = req.body;
+  console.log(userData);
+  const user = new User(userData);
   user.save(function(err) {
     if (err) {
+      console.log(err);
       res.status(500).send('Error registering new user please try again.');
     } else {
       res.status(200).send('Welcome to the club!');
@@ -28,12 +31,13 @@ router.post('/register', (req, res) => {
 });
 
 router.get('/checkToken', withAuth, (req, res) => {
-  res.sendStatus(200);
+  const { name, role, email } = req;
+  res.status(200).send({ name, role, email });
 });
 
 router.post('/authenticate', (req, res) => {
   const { email, password } = req.body;
-  User.findOne({ email }, (err, user) => {
+  User.findOne({ email }, function(err, user) {
     if (err) {
       console.error(err);
       res.status(500).json({
@@ -44,6 +48,8 @@ router.post('/authenticate', (req, res) => {
         error: 'Incorrect email or password'
       });
     } else {
+      console.log(user);
+      const { role, name } = user;
       user.isCorrectPassword(password, (err, same) => {
         if (err) {
           res.status(500).json({
@@ -55,7 +61,8 @@ router.post('/authenticate', (req, res) => {
           });
         } else {
           // Issue token
-          const payload = { email };
+          const payload = { email, role, name };
+          // console.log(role);
           const token = jwt.sign(payload, process.env.TOKEN_SECRET, {
             expiresIn: '1h'
           });

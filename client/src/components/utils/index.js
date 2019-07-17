@@ -23,3 +23,23 @@ export const isLogin = {
       });
   }
 };
+
+export const isAuth = {
+  isAuth: false,
+  authenticate(cb) {
+    fetch('/checkToken')
+      .then(res => {
+        console.log(res.status);
+        if (res.status === 200) {
+          this.isAuth = true;
+        } else {
+          const error = new Error(res.error);
+          throw error;
+        }
+      })
+      .then(() => cb())
+      .catch(err => {
+        console.error(err);
+      });
+  }
+};
