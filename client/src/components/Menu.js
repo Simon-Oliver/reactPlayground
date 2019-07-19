@@ -1,23 +1,24 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { isAuth } from './utils';
 
-export default class Menu extends Component {
+class Menu extends Component {
   // Not working properly as state is not updated when login in! component already mounted. Redux!!!
   state = {
-    loading: true,
-    isAuth: false
+    loading: true
+    // isAuth: false
   };
 
   componentDidMount() {
-    this.isAuth();
+    console.log(this.props.isAuth);
   }
 
-  isAuth = () => {
-    isAuth.authenticate(() => {
-      this.setState({ loading: false, isAuth: true }, () => console.log('setState fired'));
-    });
-  };
+  //   isAuth = () => {
+  //     isAuth.authenticate(() => {
+  //       this.setState({ loading: false, isAuth: true }, () => console.log('setState fired'));
+  //     });
+  //   };
 
   render() {
     return (
@@ -28,7 +29,7 @@ export default class Menu extends Component {
         <NavLink className="item" to="/protected" activeClassName="is-active">
           Protected Page
         </NavLink>
-        {this.state.isAuth ? (
+        {this.props.isAuth ? (
           <NavLink className="item" activeClassName="is-active">
             Logout
           </NavLink>
@@ -41,3 +42,10 @@ export default class Menu extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  console.log('mapstat prop clg', state);
+  return { isAuth: state.auth.isAuth };
+};
+
+export default connect(mapStateToProps)(Menu);
