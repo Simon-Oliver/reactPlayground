@@ -21,6 +21,10 @@ const INITIAL_STATE = {
 //   }
 // };
 
+const INTIAL_ORDER = [];
+
+const ordersReducer = (state = []);
+
 const isAuthReducer = (state = INITIAL_STATE, action) => {
   if (action.type === 'IS_AUTH') {
     console.log(action.payload);
@@ -31,6 +35,6 @@ const isAuthReducer = (state = INITIAL_STATE, action) => {
 };
 
 export default combineReducers({
-  //   login: loginReducer,
+  order: ordersReducer,
   auth: isAuthReducer
 });

@@ -15,14 +15,14 @@ class Menu extends Component {
       .then(res => {
         if (res.status === 200) {
           this.setState({ loading: false });
-          this.props.isAuthFunc(true);
+          // this.props.isAuthFunc(true);
         } else {
           const error = new Error(res.error);
           throw error;
         }
       })
       .catch(err => {
-        this.props.isAuthFunc(false);
+        // this.props.isAuthFunc(false);
         this.setState({ loading: false, redirect: true });
       });
   }

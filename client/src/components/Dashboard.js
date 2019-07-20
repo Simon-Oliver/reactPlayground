@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { isAuthFunc } from '../actions';
+import KitchenOrders from './KitchenOrders';
 
 class Dashboard extends React.Component {
   state = {
@@ -13,14 +13,14 @@ class Dashboard extends React.Component {
   componentDidMount() {
     fetch('/secret')
       .then(res => res.json())
-      .then(data => this.setState({ ...data }))
-      .then(() => this.props.isAuthFunc(true));
+      .then(data => this.setState({ ...data }));
   }
 
   render() {
     return (
       <div>
         <h3>{`I'm a private dashboard for "${this.state.name}"`}</h3>
+        <KitchenOrders />
       </div>
     );
   }
@@ -33,5 +33,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { isAuthFunc }
+  null
 )(Dashboard);

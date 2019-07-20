@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { isAuthFunc } from '../../actions';
 
-export default function withAuth(ComponentToProtect) {
+function withAuth(ComponentToProtect) {
   return class extends Component {
     state = {
       loading: true,
@@ -12,6 +15,7 @@ export default function withAuth(ComponentToProtect) {
       fetch('/checkToken')
         .then(res => {
           if (res.status === 200) {
+            this.props.isAuthFunc(true);
             this.setState({ loading: false });
           } else {
             const error = new Error(res.error);
@@ -19,6 +23,7 @@ export default function withAuth(ComponentToProtect) {
           }
         })
         .catch(err => {
+          this.props.isAuthFunc(false);
           this.setState({ loading: false, redirect: true });
         });
     }
@@ -39,3 +44,18 @@ export default function withAuth(ComponentToProtect) {
     }
   };
 }
+
+const mapStateToProps = state => {
+  console.log('withAuth mapStateToProps', state);
+  return { isAuth: state.isAuth };
+};
+
+const composeWithAuth = compose(
+  connect(
+    mapStateToProps,
+    { isAuthFunc }
+  ),
+  withAuth
+);
+
+export default composeWithAuth;
