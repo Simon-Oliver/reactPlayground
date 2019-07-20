@@ -6,6 +6,6 @@ export const signOut = () => {
   return { type: 'SIGN_OUT' };
 };
 
-export const isAuthFunc = () => {
-  return { type: 'IS_AUTH' };
+export const isAuthFunc = boolean => {
+  return { type: 'IS_AUTH', payload: { boolean } };
 };

@@ -14,7 +14,7 @@ class Dashboard extends React.Component {
     fetch('/secret')
       .then(res => res.json())
       .then(data => this.setState({ ...data }))
-      .then(() => this.props.isAuthFunc());
+      .then(() => this.props.isAuthFunc(true));
   }
 
   render() {

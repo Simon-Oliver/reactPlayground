@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { isAuth } from './utils';
+import { isAuthFunc } from '../actions';
 
 class Menu extends Component {
   // Not working properly as state is not updated when login in! component already mounted. Redux!!!
@@ -11,7 +11,20 @@ class Menu extends Component {
   };
 
   componentDidMount() {
-    console.log(this.props.isAuth);
+    fetch('/checkToken')
+      .then(res => {
+        if (res.status === 200) {
+          this.setState({ loading: false });
+          this.props.isAuthFunc(true);
+        } else {
+          const error = new Error(res.error);
+          throw error;
+        }
+      })
+      .catch(err => {
+        this.props.isAuthFunc(false);
+        this.setState({ loading: false, redirect: true });
+      });
   }
 
   //   isAuth = () => {
@@ -48,4 +61,7 @@ const mapStateToProps = state => {
   return { isAuth: state.auth.isAuth };
 };
 
-export default connect(mapStateToProps)(Menu);
+export default connect(
+  mapStateToProps,
+  { isAuthFunc }
+)(Menu);

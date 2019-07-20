@@ -23,7 +23,9 @@ const INITIAL_STATE = {
 
 const isAuthReducer = (state = INITIAL_STATE, action) => {
   if (action.type === 'IS_AUTH') {
-    return { ...state, isAuth: true };
+    console.log(action.payload);
+    const { boolean } = action.payload;
+    return { ...state, isAuth: boolean };
   }
   return state;
 };
