@@ -21,13 +21,19 @@ const INITIAL_STATE = {
 //   }
 // };
 
-const INTIAL_ORDER = [];
-
-const ordersReducer = (state = []);
+const ordersReducer = (state = [], action) => {
+  switch (action.type) {
+    case 'INIT_ORDER':
+      return [...state];
+    case 'ADD_ORDER':
+      return [...state, action.payload.order];
+    default:
+      return state;
+  }
+};
 
 const isAuthReducer = (state = INITIAL_STATE, action) => {
   if (action.type === 'IS_AUTH') {
-    console.log(action.payload);
     const { boolean } = action.payload;
     return { ...state, isAuth: boolean };
   }

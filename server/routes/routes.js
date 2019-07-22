@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Order = require('../models/Order');
 const withAuth = require('../helper/middleware');
 
 dotenv.config();
@@ -26,6 +27,20 @@ router.post('/register', (req, res) => {
       res.status(500).send('Error registering new user please try again.');
     } else {
       res.status(200).send('Welcome to the club!');
+    }
+  });
+});
+
+router.post('/new/order', (req, res) => {
+  const { ...newOrder } = req.body;
+  console.log(newOrder);
+  const order = new Order(newOrder);
+  order.save(function(err) {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error registering new order please try again.');
+    } else {
+      res.status(200).send('Order has been saved!');
     }
   });
 });

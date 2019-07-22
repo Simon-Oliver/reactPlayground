@@ -9,3 +9,7 @@ export const signOut = () => {
 export const isAuthFunc = boolean => {
   return { type: 'IS_AUTH', payload: { boolean } };
 };
+
+export const initOrder = () => {
+  return { type: 'INIT_ORDER' };
+};
