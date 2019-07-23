@@ -41,6 +41,6 @@ const isAuthReducer = (state = INITIAL_STATE, action) => {
 };
 
 export default combineReducers({
-  order: ordersReducer,
+  orders: ordersReducer,
   auth: isAuthReducer
 });

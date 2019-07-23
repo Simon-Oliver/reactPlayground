@@ -46,7 +46,6 @@ function withAuth(ComponentToProtect) {
 }
 
 const mapStateToProps = state => {
-  console.log('withAuth mapStateToProps', state);
   return { isAuth: state.isAuth };
 };
 

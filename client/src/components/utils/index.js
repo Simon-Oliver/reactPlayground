@@ -29,7 +29,6 @@ export const isAuth = {
   authenticate(cb) {
     fetch('/checkToken')
       .then(res => {
-        console.log(res.status);
         if (res.status === 200) {
           this.isAuth = true;
         } else {

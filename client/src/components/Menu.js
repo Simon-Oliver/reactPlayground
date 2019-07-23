@@ -57,7 +57,6 @@ class Menu extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log('mapstat prop clg', state);
   return { isAuth: state.auth.isAuth };
 };
 

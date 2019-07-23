@@ -19,11 +19,9 @@ router.get('/secret', withAuth, (req, res) => {
 
 router.post('/register', (req, res) => {
   const { ...userData } = req.body;
-  console.log(userData);
   const user = new User(userData);
   user.save(function(err) {
     if (err) {
-      console.log(err);
       res.status(500).send('Error registering new user please try again.');
     } else {
       res.status(200).send('Welcome to the club!');
@@ -33,11 +31,9 @@ router.post('/register', (req, res) => {
 
 router.post('/new/order', (req, res) => {
   const { ...newOrder } = req.body;
-  console.log(newOrder);
   const order = new Order(newOrder);
   order.save(function(err) {
     if (err) {
-      console.log(err);
       res.status(500).send('Error registering new order please try again.');
     } else {
       res.status(200).send('Order has been saved!');
